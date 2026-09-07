@@ -15,6 +15,35 @@ local SLOT_H    = ICON_SIZE + 4 + 16  -- icon + gap + amount text
 local CURRENCY_GAP = 20   -- gap after the previous card (TraitNodes)
 local HEADER_TO_CONTENT_GAP = MPT_Sidebar.LAYOUT.HEADER_TO_CONTENT_GAP
 
+---Whether a currency has hit its cap (weekly or season-total, whichever
+---applies) — verified against how the Plumber addon does this
+---(CurrencyButtonMixin:Refresh in its Currency.lua): the season-earned
+---formula and the official Blizzard queries are independent signals, OR'd
+---together, not one a fallback for the other. That distinction matters for
+---crests specifically: `quantity` (currently held) drops as crests get spent
+---on upgrades, while `totalEarned` (this season's progress toward the cap,
+---the same number the game's own tooltip shows) does not — a currency can
+---read as season-capped in the tooltip while quantity is well below
+---maxQuantity, which C_CurrencyInfo.PlayerHasMaxQuantity alone doesn't catch.
+---@param currency table result of C_CurrencyInfo.GetCurrencyInfo
+---@param currencyId number
+---@return boolean
+local function isCurrencyCapped(currency, currencyId)
+    local quantity    = currency.quantity or 0
+    local totalEarned = currency.totalEarned or 0
+    local maxQuantity = currency.maxQuantity or 0
+
+    local formulaCapped = quantity > 0 and maxQuantity > 0
+        and ((maxQuantity - totalEarned == 0) or quantity >= maxQuantity)
+
+    local apiCapped = false
+    if C_CurrencyInfo.PlayerHasMaxWeeklyQuantity and C_CurrencyInfo.PlayerHasMaxQuantity then
+        apiCapped = C_CurrencyInfo.PlayerHasMaxWeeklyQuantity(currencyId) or C_CurrencyInfo.PlayerHasMaxQuantity(currencyId)
+    end
+
+    return formulaCapped or apiCapped
+end
+
 local function loadCurrency(frame, currencyId, index)
     local currency = C_CurrencyInfo.GetCurrencyInfo(currencyId)
     if not currency then return end
@@ -31,12 +60,7 @@ local function loadCurrency(frame, currencyId, index)
     amount:SetPoint("TOPLEFT", frame, "TOPLEFT", xOffset, -ICON_SIZE - 4)
     amount:SetJustifyH("CENTER")
 
-    local weeklyCapReached = false
-    if currency.maxWeeklyQuantity and currency.maxWeeklyQuantity > 0 then
-        local earned = currency.quantityEarnedThisWeek or 0
-        weeklyCapReached = earned >= currency.maxWeeklyQuantity
-    end
-    if weeklyCapReached then
+    if isCurrencyCapped(currency, currencyId) then
         amount:SetText(addon.colors.SUCCESS .. currency.quantity .. addon.colors.RESET)
     else
         amount:SetText(addon.colors.WHITE .. currency.quantity .. addon.colors.RESET)

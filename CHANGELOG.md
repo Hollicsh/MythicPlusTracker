@@ -2,9 +2,12 @@
 
 All notable changes to MythicPlusTracker are documented here.
 
-## [1.4.0] - 2026-08-26
+## [1.4.0] - UNRELEASED
 
 ### Added
+- **"Current week only" filter in the Overview tab.** A new checkbox above the table (clicking its label toggles it too) limits Runs, Success, and Best Time to what was completed since the last weekly reset. Level and Score are unaffected, since those reflect Blizzard's season-wide best rather than the local run history.
+- **Filters in the Runs tab.** Three new dropdowns above the table — Dungeon, Timed/Not Timed, and keystone-level bracket (2-3 / 4-6 / 7-9 / 10-11 / 12-14 / 15+) — each support selecting multiple options at once, and selections persist across sessions.
+- **Teleport icon in the Keystones tab's Group view**, matching the Overview tab's existing dungeon teleport icon: hover for a glow + tooltip, click to cast the known "Path of ..." spell for that dungeon.
 - `Tools/registration-validator.sh`, wired into CI: it catches `.lua` files that exist but aren't referenced from any `.toc`/`.xml` manifest. That failure mode produces no error and no warning in-game — the file simply never runs, and whatever it defined is silently missing.
 - `.gitattributes`, so line endings are normalized in the repository instead of depending on each contributor's local git configuration.
 - `CODING_GUIDELINES.md` section 3.4 defines what earns a `Service` suffix, where a service belongs depending on who calls it, and which words are banned in file names.
@@ -21,6 +24,8 @@ All notable changes to MythicPlusTracker are documented here.
 - Removed dead code: the never-used `MythicPlusTracker.lua` core file, an always-true debug guard in the minimap button, and a window-visibility flag nothing ever read.
 
 ### Fixed
+- **Crest currency amounts in the Sidebar never turned green, even once the season cap was reached.** The color check compared the currently-held quantity against the cap, but that quantity drops as crests get spent on upgrades — a currency can be fully earned for the season (per the game's own tooltip) while sitting well under its cap in your bag. It now checks the season-earned total instead, alongside the official `C_CurrencyInfo` cap queries.
+- **Content could render over a window's ornate border**, most visibly a dungeon icon in the Overview table's bottom row poking over the corner artwork — deeply nested content frames could end up with a higher effective frame level than the border itself. The border now always draws on top, in both the Dashboard and Sidebar windows.
 - **The Overview tab showed keys that weren't timed.** Runs at keystone level 12 or above were counted as a dungeon's best even when they weren't completed in time, along with their over-the-limit duration in the Best Time column. Those runs no longer count; below level 12 an over-time run still does, since it still awards score. Of the eligible runs the highest-scoring one wins, so Level, Score and Best Time always describe the same run instead of potentially three different ones.
 - The minimap button's tooltip promised that left-clicking would *toggle* the dashboard, but a click only ever opened it — a second click never closed it. The tooltip now says "open", in all five languages.
 - `Tools/toc-validator.sh` reported 13 false "MISSING" entries on Windows checkouts because it didn't strip the CR from CRLF line endings, which left the repository's main structural check effectively unusable locally while passing in CI.

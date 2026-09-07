@@ -1,10 +1,19 @@
 local addonName, addon = ...
 
+MythicPlusTrackerDB = MythicPlusTrackerDB or {}
+
 local PADDING_X  = 8
 local ROW_H      = 50   -- increased over HEADER_H's 30 for a full-height table
 local HEADER_H   = 30
 local COL_GAP    = 8
 local ICON_SIZE  = 36
+-- Reserved control-row height/margin above the table. Kept deliberately small
+-- (rather than matching KeystonesPage's 26px dropdown row) because the
+-- Dashboard frame's fixed height leaves this table only ~18px of slack below
+-- its last row (8 dungeons at ROW_H=50) — anything bigger pushes the last row
+-- out past the frame's bottom edge.
+local WEEK_FILTER_ROW_H      = 14
+local WEEK_FILTER_ROW_MARGIN = 2
 
 local NAV_BOTTOM_MARGIN = MPT_Dashboard.LAYOUT.NAV_BOTTOM_MARGIN
 local DASHBOARD_W       = MPT_Dashboard.LAYOUT.WIDTH
@@ -99,6 +108,63 @@ local function buildRunLookup(runHistory)
     return lookup
 end
 
+---Runs whose completionDate falls within the current weekly-reset week, used
+---to limit Läufe/Erfolge/Beste Zeit to what was completed since the last
+---reset when the "current week" checkbox is active. Wertung stays unaffected
+---since getDungeonScore prefers Blizzard's season-wide GetSeasonBestForMap
+---over the locally aggregated score.
+---@param runHistory table
+---@return table
+local function filterRunsSinceWeekStart(runHistory)
+    local weekStart = addon.getCurrentWeekStartTime()
+    local filtered = {}
+    for _, run in ipairs(runHistory) do
+        local timestamp = addon.completionDateToTimestamp(run.completionDate)
+        if timestamp and timestamp >= weekStart then
+            table.insert(filtered, run)
+        end
+    end
+    return filtered
+end
+
+---Toggle for limiting Läufe/Erfolge/Beste Zeit to the current weekly-reset
+---week, right-aligned above the table like the Keystones tab's mode dropdown.
+---Persisted so it survives a UI reload; toggling re-renders the whole tab.
+---@param frame Frame the tab's content panel
+local function createWeekFilterCheckbox(frame)
+    local checkbox = CreateFrame("CheckButton", nil, frame, "UICheckButtonTemplate")
+    checkbox:SetSize(WEEK_FILTER_ROW_H, WEEK_FILTER_ROW_H)
+    checkbox:SetPoint("TOPRIGHT", MPT_Dashboard.navFrame, "BOTTOMRIGHT", -CONTENT_INSET, -NAV_BOTTOM_MARGIN)
+    checkbox:SetChecked(MythicPlusTrackerDB.overviewFilterCurrentWeek)
+
+    local function applyFilterChange(checked)
+        MythicPlusTrackerDB.overviewFilterCurrentWeek = checked
+        MPT_Dashboard:refreshDungeonsView()
+    end
+
+    checkbox:SetScript("OnClick", function(self)
+        applyFilterChange(self:GetChecked() == true)
+    end)
+
+    -- A plain FontString can't receive clicks, so the label is its own Button
+    -- (sized to the rendered text) to the checkbox's left — clicking the text
+    -- toggles the checkbox exactly like clicking the checkbox itself.
+    local labelButton = CreateFrame("Button", nil, frame)
+    labelButton:SetHeight(WEEK_FILTER_ROW_H)
+    labelButton:SetPoint("RIGHT", checkbox, "LEFT", -4, 0)
+
+    local labelText = labelButton:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+    labelText:SetPoint("RIGHT", labelButton, "RIGHT", 0, 0)
+    labelText:SetText(addon.colors.POOR .. addon.locale["DUNGEON_CURRENT_WEEK_ONLY"] .. addon.colors.RESET)
+
+    labelButton:SetWidth(labelText:GetStringWidth())
+    labelButton:SetScript("OnClick", function()
+        local checked = not checkbox:GetChecked()
+        checkbox:SetChecked(checked)
+        applyFilterChange(checked)
+    end)
+end
+
 local function getDungeonScore(mapID, ri)
     if C_MythicPlus.GetSeasonBestForMap then
         local info = C_MythicPlus.GetSeasonBestForMap(mapID)
@@ -149,63 +215,10 @@ local function createTableRow(child, mapID, colX, rowY, nameW, runLookup, isLast
     icon:SetPoint("TOPLEFT", child, "TOPLEFT", colX["icon"] + 2, rowY - (ROW_H - ICON_SIZE) / 2)
     icon:SetTexture(texture)
 
-    -- Soft blue pulse shown on hover when the teleport below is actually
-    -- usable — a portal-shimmer cue on top of the plain brightening, so a
-    -- clickable icon reads as different from a merely-brightened one.
-    -- Plain color texture (no external asset) blended additively.
-    local glow = child:CreateTexture(nil, "OVERLAY")
-    glow:SetAllPoints(icon)
-    glow:SetColorTexture(0.3, 0.6, 1, 1)
-    glow:SetBlendMode("ADD")
-    glow:Hide()
-
-    local glowAnim = glow:CreateAnimationGroup()
-    glowAnim:SetLooping("BOUNCE")
-    local glowFade = glowAnim:CreateAnimation("Alpha")
-    glowFade:SetFromAlpha(0.15)
-    glowFade:SetToAlpha(0.55)
-    glowFade:SetDuration(0.6)
-    glowFade:SetSmoothing("IN_OUT")
-
     -- Clicking the dungeon icon teleports the player via the matching known
     -- "Path of ..." spell, if one is known (see Dashboard/DungeonTeleportCatalog.lua).
-    -- Uses a SecureActionButtonTemplate so the protected spell cast is
-    -- allowed to run directly from the click.
-    local teleport = addon.getDungeonTeleport(mapID)
-    local hasTeleport = teleport and C_SpellBook.IsSpellKnown(teleport.spellID)
-    local teleportBtn = CreateFrame("Button", nil, child, "SecureActionButtonTemplate")
-    teleportBtn:SetSize(ICON_SIZE, ICON_SIZE)
-    -- Anchored with the same coordinates as `icon`, relative to `child` (a
-    -- Frame) rather than `icon` itself (a Texture/region) — secure/protected
-    -- frames cannot be anchored to regions, only to other frames.
-    teleportBtn:SetPoint("TOPLEFT", child, "TOPLEFT", colX["icon"] + 2, rowY - (ROW_H - ICON_SIZE) / 2)
-    teleportBtn:RegisterForClicks("AnyUp", "AnyDown")
-    if hasTeleport then
-        teleportBtn:SetAttribute("type", "spell")
-        teleportBtn:SetAttribute("spell", teleport.spellID)
-    end
-    teleportBtn:SetScript("OnEnter", function(self)
-        icon:SetVertexColor(1.15, 1.15, 1.15)
-        if hasTeleport then
-            glow:Show()
-            glowAnim:Play()
-        end
-        GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-        if hasTeleport then
-            GameTooltip:SetSpellByID(teleport.spellID)
-            GameTooltip:AddLine(addon.locale["DUNGEON_TELEPORT_TOOLTIP"], 0, 1, 0, true)
-        else
-            GameTooltip:AddLine(name, ARTIFACT_R, ARTIFACT_G, ARTIFACT_B)
-            GameTooltip:AddLine(addon.locale["DUNGEON_TELEPORT_NOT_OWNED"], 1, 0.2, 0.2, true)
-        end
-        GameTooltip:Show()
-    end)
-    teleportBtn:SetScript("OnLeave", function()
-        icon:SetVertexColor(1, 1, 1)
-        glowAnim:Stop()
-        glow:Hide()
-        GameTooltip:Hide()
-    end)
+    addon.attachDungeonTeleportButton(child, icon, mapID, name,
+        colX["icon"] + 2, rowY - (ROW_H - ICON_SIZE) / 2, ICON_SIZE)
 
     addon.createTableCell(child, colX["name"], rowY, nameW, ROW_H, name, "GameFontHighlight", "LEFT")
 
@@ -342,8 +355,15 @@ function MPT_Dashboard:loadDungeons(frame)
     local dungeons = C_ChallengeMode.GetMapTable()
     if not dungeons then return end
 
+    MythicPlusTrackerDB.overviewFilterCurrentWeek = MythicPlusTrackerDB.overviewFilterCurrentWeek or false
+
     local runHistory = addon.RunHistoryService:getRuns()
-    local runLookup  = buildRunLookup(runHistory)
+    if MythicPlusTrackerDB.overviewFilterCurrentWeek then
+        runHistory = filterRunsSinceWeekStart(runHistory)
+    end
+    local runLookup = buildRunLookup(runHistory)
+
+    createWeekFilterCheckbox(frame)
 
     local tableW = DASHBOARD_W - CONTENT_INSET * 2
 
@@ -368,7 +388,8 @@ function MPT_Dashboard:loadDungeons(frame)
 
     local tableFrame = CreateFrame("Frame", nil, frame)
     tableFrame:SetSize(tableW, childHeight)
-    tableFrame:SetPoint("TOP",  MPT_Dashboard.navFrame, "BOTTOM", 0, -NAV_BOTTOM_MARGIN)
+    tableFrame:SetPoint("TOP",  MPT_Dashboard.navFrame, "BOTTOM", 0,
+        -(NAV_BOTTOM_MARGIN + WEEK_FILTER_ROW_H + WEEK_FILTER_ROW_MARGIN))
     tableFrame:SetPoint("LEFT", frame,                  "LEFT",   CONTENT_INSET, 0)
 
     createTableHeader(tableFrame, colX, nameW, function()

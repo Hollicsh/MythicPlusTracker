@@ -56,6 +56,7 @@ local locale = {
     ["DUNGEON_TOOLTIP_TIME_LIMIT"] = "Time Limit",
     ["DUNGEON_TELEPORT_TOOLTIP"] = "Click to teleport",
     ["DUNGEON_TELEPORT_NOT_OWNED"] = "No teleport toy known or owned for this dungeon",
+    ["DUNGEON_CURRENT_WEEK_ONLY"] = "Current week only",
     -- Overview summary boxes
     ["DASHBOARD_SUMMARY_HIGHEST_KEY"]   = "Highest Keystone",
     ["DASHBOARD_SUMMARY_TOTAL_RUNS"]    = "Total Runs",
@@ -69,6 +70,9 @@ local locale = {
     ["RUN_COL_DATE"]      = "Date",
     ["RUN_COL_TIME_DELTA"] = "Time +/-",
     ["RUN_TABLE_NO_RUNS"] = "No runs recorded yet.",
+    -- Runs table filters
+    ["RUNS_FILTER_TIMED_LABEL"] = "Timed",
+    ["RUNS_FILTER_UNTIMED"]     = "Not timed",
     -- Runs table tooltips
     ["RUN_TOOLTIP_TIME_LIMIT"]    = "Time Limit",
     ["RUN_TOOLTIP_DUNGEON_SCORE"] = "Dungeon Score",
