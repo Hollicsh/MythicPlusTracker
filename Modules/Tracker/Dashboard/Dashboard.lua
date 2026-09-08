@@ -40,19 +40,9 @@ local function create(mainFrame)
     frame:SetSize(MPT_Dashboard.LAYOUT.WIDTH, MPT_Dashboard.LAYOUT.HEIGHT)
     frame:SetPoint("TOPRIGHT", mainFrame)
 
-    local bg = frame:CreateTexture(nil, "BACKGROUND")
-    bg:SetAllPoints(frame)
-    bg:SetAtlas(addon.theme.FRAME_BACKGROUND, false)
-
-    local borderFrame = CreateFrame("Frame", nil, frame)
-    borderFrame:SetAllPoints(frame)
-    -- Same technique as the Sidebar border (see Sidebar/Sidebar.lua); the
+    -- Same helper as the Sidebar border (see Sidebar/Sidebar.lua); the
     -- larger panel needs a smaller scale factor to line up the edges.
-    borderFrame:SetScale(0.5)
-
-    local border = borderFrame:CreateTexture(nil, "OVERLAY")
-    border:SetAllPoints(borderFrame)
-    border:SetAtlas(addon.theme.FRAME_BORDER, false)
+    addon.createFramedWindow(frame, 0.5)
 
     local function getDefaultTabIndex()
         if MythicPlusTrackerDB.dashboardDefaultTabInGroup and IsInGroup() then
@@ -119,4 +109,10 @@ end
 ---button), without touching the nav highlight or the rest of the frame.
 function MPT_Dashboard:refreshKeystonesView()
     showContent(MPT_Dashboard.loadKeystones)
+end
+
+---Re-renders the Overview tab content in place (e.g. from its "current week
+---only" checkbox), without touching the nav highlight or the rest of the frame.
+function MPT_Dashboard:refreshDungeonsView()
+    showContent(MPT_Dashboard.loadDungeons)
 end

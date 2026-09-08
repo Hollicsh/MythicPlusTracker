@@ -10,6 +10,31 @@ function addon.formatMinutesSeconds(seconds)
     return string.format("%d:%02d", math.floor(seconds / 60), seconds % 60)
 end
 
+---Start of the current weekly-reset week, as a time() timestamp. Computed as
+---the next reset (via the Blizzard API that also drives quest/vault reset
+---countdowns) minus 7 days, so it works regardless of region/reset weekday.
+---@return number timestamp
+function addon.getCurrentWeekStartTime()
+    return time() + C_DateAndTime.GetSecondsUntilWeeklyReset() - 7 * 24 * 60 * 60
+end
+
+---Converts a run's completionDate table ({year, month, monthDay, hour,
+---minute, weekday}, as returned by C_MythicPlus.GetRunHistory) to a time()
+---timestamp, for comparison against addon.getCurrentWeekStartTime().
+---@param completionDate table|nil
+---@return number|nil timestamp nil if completionDate is missing/malformed
+function addon.completionDateToTimestamp(completionDate)
+    if type(completionDate) ~= "table" then return nil end
+    return time({
+        year  = completionDate.year,
+        month = completionDate.month,
+        day   = completionDate.monthDay,
+        hour  = completionDate.hour or 0,
+        min   = completionDate.minute or 0,
+        sec   = 0,
+    })
+end
+
 ---Formats a GetServerTime() timestamp as a short localized "time ago" string
 ---(e.g. "vor 5 Min."), for tooltips that show the freshness of cached/synced
 ---data (Twinks/Guild keystone views). Returns TIME_UNKNOWN if the timestamp

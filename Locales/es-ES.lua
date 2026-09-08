@@ -63,6 +63,7 @@ local locale = {
     ["DUNGEON_TOOLTIP_TIME_LIMIT"] = "Límite de tiempo",
     ["DUNGEON_TELEPORT_TOOLTIP"] = "Haz clic para teletransportarte",
     ["DUNGEON_TELEPORT_NOT_OWNED"] = "No se conoce ni se posee ningún juguete de teletransporte para esta mazmorra",
+    ["DUNGEON_CURRENT_WEEK_ONLY"] = "Solo la semana actual",
     -- Overview summary boxes
     ["DASHBOARD_SUMMARY_HIGHEST_KEY"]   = "Llave más alta",
     ["DASHBOARD_SUMMARY_TOTAL_RUNS"]    = "Mazmorras totales",
@@ -76,6 +77,9 @@ local locale = {
     ["RUN_COL_DATE"]      = "Fecha",
     ["RUN_COL_TIME_DELTA"] = "Tiempo +/-",
     ["RUN_TABLE_NO_RUNS"] = "Aún no se ha registrado ninguna mazmorra.",
+    -- Runs table filters
+    ["RUNS_FILTER_TIMED_LABEL"] = "Límite de tiempo",
+    ["RUNS_FILTER_UNTIMED"]     = "Fuera de tiempo",
     -- Runs table tooltips
     ["RUN_TOOLTIP_TIME_LIMIT"]    = "Límite de tiempo",
     ["RUN_TOOLTIP_DUNGEON_SCORE"] = "Puntuación de la mazmorra",

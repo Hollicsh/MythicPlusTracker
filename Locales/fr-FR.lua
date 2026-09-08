@@ -63,6 +63,7 @@ local locale = {
     ["DUNGEON_TOOLTIP_TIME_LIMIT"] = "Limite de temps",
     ["DUNGEON_TELEPORT_TOOLTIP"] = "Cliquez pour vous téléporter",
     ["DUNGEON_TELEPORT_NOT_OWNED"] = "Aucun jouet de téléportation connu ou possédé pour ce donjon",
+    ["DUNGEON_CURRENT_WEEK_ONLY"] = "Semaine en cours uniquement",
     -- Overview summary boxes
     ["DASHBOARD_SUMMARY_HIGHEST_KEY"]   = "Clé la plus élevée",
     ["DASHBOARD_SUMMARY_TOTAL_RUNS"]    = "Donjons totaux",
@@ -76,6 +77,9 @@ local locale = {
     ["RUN_COL_DATE"]      = "Date",
     ["RUN_COL_TIME_DELTA"] = "Temps +/-",
     ["RUN_TABLE_NO_RUNS"] = "Aucun donjon enregistré pour le moment.",
+    -- Runs table filters
+    ["RUNS_FILTER_TIMED_LABEL"] = "Limite de temps",
+    ["RUNS_FILTER_UNTIMED"]     = "Hors délai",
     -- Runs table tooltips
     ["RUN_TOOLTIP_TIME_LIMIT"]    = "Limite de temps",
     ["RUN_TOOLTIP_DUNGEON_SCORE"] = "Score du donjon",

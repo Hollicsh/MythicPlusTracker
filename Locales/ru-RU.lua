@@ -60,6 +60,7 @@ local locale = {
     ["DUNGEON_TOOLTIP_TIME_LIMIT"] = "Ограничение по времени",
     ["DUNGEON_TELEPORT_TOOLTIP"] = "Нажмите, чтобы телепортироваться",
     ["DUNGEON_TELEPORT_NOT_OWNED"] = "Нет известной или имеющейся игрушки-телепорта для этого подземелья",
+    ["DUNGEON_CURRENT_WEEK_ONLY"] = "Только текущая неделя",
     -- Overview summary boxes
     ["DASHBOARD_SUMMARY_HIGHEST_KEY"]   = "Наивысший ключ",
     ["DASHBOARD_SUMMARY_TOTAL_RUNS"]    = "Всего прохождений",
@@ -73,6 +74,9 @@ local locale = {
     ["RUN_COL_DATE"]      = "Дата",
     ["RUN_COL_TIME_DELTA"] = "Время +/-",
     ["RUN_TABLE_NO_RUNS"] = "Прохождений пока не зафиксировано.",
+    -- Runs table filters
+    ["RUNS_FILTER_TIMED_LABEL"] = "Ограничение по времени",
+    ["RUNS_FILTER_UNTIMED"]     = "Не вовремя",
     -- Runs table tooltips
     ["RUN_TOOLTIP_TIME_LIMIT"]    = "Ограничение по времени",
     ["RUN_TOOLTIP_DUNGEON_SCORE"] = "Результат подземелья",

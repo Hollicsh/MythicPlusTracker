@@ -403,7 +403,10 @@ end
 ---@param mapID number|nil
 ---@param level number|nil
 ---@param noKeyText string
-local function createDungeonAndLevelCell(parent, colX, dungeonW, rowY, mapID, level, noKeyText)
+---@param allowTeleport boolean|nil when true (Group mode only — see MPT_Dashboard:loadKeystones),
+---the icon becomes clickable to teleport via the local player's own known
+---"Path of ..." spell for this dungeon, same as the Overview tab's icon
+local function createDungeonAndLevelCell(parent, colX, dungeonW, rowY, mapID, level, noKeyText, allowTeleport)
     if mapID and level then
         local dungeonName, _, _, texture = C_ChallengeMode.GetMapUIInfo(mapID)
         dungeonName = dungeonName or ("Map " .. tostring(mapID))
@@ -414,6 +417,11 @@ local function createDungeonAndLevelCell(parent, colX, dungeonW, rowY, mapID, le
             dungeonIcon:SetPoint("TOPLEFT", parent, "TOPLEFT",
                 colX["dungeon"], rowY - (ROW_H - DUNGEON_ICON_SIZE) / 2)
             dungeonIcon:SetTexture(texture)
+
+            if allowTeleport then
+                addon.attachDungeonTeleportButton(parent, dungeonIcon, mapID, dungeonName,
+                    colX["dungeon"], rowY - (ROW_H - DUNGEON_ICON_SIZE) / 2, DUNGEON_ICON_SIZE)
+            end
         end
 
         local dungeonText = parent:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
@@ -503,7 +511,7 @@ local function createRow(parent, entry, colX, nameW, dungeonW, rowY, isLast)
     end
 
     if entry.hasAddon then
-        createDungeonAndLevelCell(parent, colX, dungeonW, rowY, entry.mapID, entry.level, addon.locale["KEYSTONES_NO_KEY"])
+        createDungeonAndLevelCell(parent, colX, dungeonW, rowY, entry.mapID, entry.level, addon.locale["KEYSTONES_NO_KEY"], true)
     else
         -- No response received at all: member likely does not run MythicPlusTracker.
         createNoAddonCell(parent, colX, dungeonW, rowY, addon.locale["KEYSTONES_NO_ADDON"])
