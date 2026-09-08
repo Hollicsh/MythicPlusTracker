@@ -2,7 +2,7 @@
 
 All notable changes to MythicPlusTracker are documented here.
 
-## [1.4.0] - UNRELEASED
+## [1.4.0] - 2026-09-08
 
 ### Added
 - **"Current week only" filter in the Overview tab.** A new checkbox above the table (clicking its label toggles it too) limits Runs, Success, and Best Time to what was completed since the last weekly reset. Level and Score are unaffected, since those reflect Blizzard's season-wide best rather than the local run history.
