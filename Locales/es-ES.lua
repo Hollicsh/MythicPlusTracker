@@ -121,6 +121,15 @@ local locale = {
     ["TIME_MINUTES_AGO"] = "hace %d min.",
     ["TIME_HOURS_AGO"]   = "hace %d h",
     ["TIME_DAYS_AGO"]    = "hace %d días",
+    -- Dungeon bonus event
+    ["BONUS_EVENT_TOOLTIP_TITLE"]   = "Evento de bonificación de mazmorras",
+    ["BONUS_EVENT_ACTIVE"]          = "El evento de bonificación de esta semana recompensa las mazmorras míticas.",
+    ["BONUS_EVENT_QUEST_LABEL"]     = "Misión semanal: %s",
+    ["BONUS_EVENT_QUEST_LOADING"]   = "cargando…",
+    ["BONUS_EVENT_QUEST_AVAILABLE"] = "Disponible en el archimago Aethas Cosechasol en Ciudad de Lunargenta.",
+    ["BONUS_EVENT_QUEST_COMPLETED"] = "Ya completada esta semana.",
+    ["BONUS_EVENT_QUEST_TURN_IN"]   = "Lista para entregar.",
+    ["BONUS_EVENT_QUEST_PROGRESS"]  = "%d/%d completadas",
     -- Settings panel
     ["SETTINGS_CATEGORY_NAME"]         = "Mythic Plus Tracker",
     ["SETTINGS_SECTION_GENERAL_LABEL"] = "General",
@@ -138,6 +147,8 @@ local locale = {
     ["MINIMAP_BUTTON_STYLE_NORMAL"] = "Normal",
     ["SETTINGS_WELCOME_MESSAGE_LABEL"]  = "Mostrar mensaje de bienvenida",
     ["SETTINGS_WELCOME_MESSAGE_TOOLTIP"] = "Muestra u oculta el mensaje de bienvenida de Mythic Plus Tracker al iniciar sesión.",
+    ["SETTINGS_BONUS_EVENT_ICON_LABEL"]   = "Mostrar icono de evento de bonificación",
+    ["SETTINGS_BONUS_EVENT_ICON_TOOLTIP"] = "Muestra un icono en la cabecera de la ventana del tracker mientras el evento de bonificación semanal de mazmorras míticas está activo.",
 }
 
 for key, value in pairs(locale) do

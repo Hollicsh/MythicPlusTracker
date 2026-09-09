@@ -121,6 +121,15 @@ local locale = {
     ["TIME_MINUTES_AGO"] = "il y a %d min",
     ["TIME_HOURS_AGO"]   = "il y a %d h",
     ["TIME_DAYS_AGO"]    = "il y a %d jours",
+    -- Dungeon bonus event
+    ["BONUS_EVENT_TOOLTIP_TITLE"]   = "Événement bonus de donjon",
+    ["BONUS_EVENT_ACTIVE"]          = "L'événement bonus de cette semaine récompense les donjons mythiques.",
+    ["BONUS_EVENT_QUEST_LABEL"]     = "Quête hebdomadaire : %s",
+    ["BONUS_EVENT_QUEST_LOADING"]   = "chargement…",
+    ["BONUS_EVENT_QUEST_AVAILABLE"] = "Disponible auprès de l'archimage Aethas Faucheronde à Lune-d'Argent.",
+    ["BONUS_EVENT_QUEST_COMPLETED"] = "Déjà terminée cette semaine.",
+    ["BONUS_EVENT_QUEST_TURN_IN"]   = "Prête à être rendue.",
+    ["BONUS_EVENT_QUEST_PROGRESS"]  = "%d/%d terminés",
     -- Settings panel
     ["SETTINGS_CATEGORY_NAME"]         = "Mythic Plus Tracker",
     ["SETTINGS_SECTION_GENERAL_LABEL"] = "Général",
@@ -138,6 +147,8 @@ local locale = {
     ["MINIMAP_BUTTON_STYLE_NORMAL"] = "Normal",
     ["SETTINGS_WELCOME_MESSAGE_LABEL"]  = "Afficher le message de bienvenue",
     ["SETTINGS_WELCOME_MESSAGE_TOOLTIP"] = "Affiche ou masque le message de bienvenue de Mythic Plus Tracker à la connexion.",
+    ["SETTINGS_BONUS_EVENT_ICON_LABEL"]   = "Afficher l'icône d'événement bonus",
+    ["SETTINGS_BONUS_EVENT_ICON_TOOLTIP"] = "Affiche une icône dans l'en-tête de la fenêtre du tracker pendant l'événement bonus hebdomadaire des donjons mythiques.",
 }
 
 for key, value in pairs(locale) do

@@ -117,6 +117,15 @@ local locale = {
     ["TIME_MINUTES_AGO"] = "%d min. ago",
     ["TIME_HOURS_AGO"]   = "%d hr. ago",
     ["TIME_DAYS_AGO"]    = "%d days ago",
+    -- Dungeon bonus event
+    ["BONUS_EVENT_TOOLTIP_TITLE"]   = "Dungeon Bonus Event",
+    ["BONUS_EVENT_ACTIVE"]          = "This week's bonus event rewards Mythic dungeon runs.",
+    ["BONUS_EVENT_QUEST_LABEL"]     = "Weekly quest: %s",
+    ["BONUS_EVENT_QUEST_LOADING"]   = "loading...",
+    ["BONUS_EVENT_QUEST_AVAILABLE"] = "Available from Archmage Aethas Sunreaver in Silvermoon City.",
+    ["BONUS_EVENT_QUEST_COMPLETED"] = "Already completed this week.",
+    ["BONUS_EVENT_QUEST_TURN_IN"]   = "Ready to turn in.",
+    ["BONUS_EVENT_QUEST_PROGRESS"]  = "%d/%d completed",
     -- Settings panel
     ["SETTINGS_CATEGORY_NAME"]         = "Mythic Plus Tracker",
     ["SETTINGS_SECTION_GENERAL_LABEL"] = "General",
@@ -134,6 +143,8 @@ local locale = {
     ["MINIMAP_BUTTON_STYLE_NORMAL"] = "Normal",
     ["SETTINGS_WELCOME_MESSAGE_LABEL"]  = "Show Welcome Message",
     ["SETTINGS_WELCOME_MESSAGE_TOOLTIP"] = "Shows or hides the Mythic Plus Tracker welcome message on login.",
+    ["SETTINGS_BONUS_EVENT_ICON_LABEL"]   = "Show Bonus Event Icon",
+    ["SETTINGS_BONUS_EVENT_ICON_TOOLTIP"] = "Shows an icon in the tracker window's header while the weekly Mythic dungeon bonus event is active.",
 }
 
 for key, value in pairs(locale) do

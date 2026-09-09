@@ -1,6 +1,7 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/">
 
     <Script file='Tracker\Tracker.lua'/>
+    <Script file='Tracker\DungeonBonusEvent.lua'/>
     <Script file='Tracker\MainFrame.lua'/>
 
     <Script file='Tracker\Services\AltKeystoneService.lua'/>

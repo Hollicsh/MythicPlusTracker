@@ -80,6 +80,10 @@ local function create(mainFrame)
 
         addon.debugMessage("Dashboard Frame OnShow")
 
+        -- Ahead of the max-level guard below, so the icon is also correctly
+        -- hidden on the not-max-level page.
+        MPT_Dashboard:refreshBonusEventIcon()
+
         if not addon.Player:isMaxLevel() then
             MPT_Dashboard:setActiveNavTab(MPT_Tracker.TABS.OVERVIEW)
             MPT_Dashboard:loadNotMaxLevel(contentWrapper)

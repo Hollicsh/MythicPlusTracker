@@ -121,6 +121,15 @@ local locale = {
     ["TIME_MINUTES_AGO"] = "vor %d Min.",
     ["TIME_HOURS_AGO"]   = "vor %d Std.",
     ["TIME_DAYS_AGO"]    = "vor %d Tagen",
+    -- Dungeon bonus event
+    ["BONUS_EVENT_TOOLTIP_TITLE"]   = "Dungeon-Bonusereignis",
+    ["BONUS_EVENT_ACTIVE"]          = "Das Bonusereignis dieser Woche belohnt mythische Dungeons.",
+    ["BONUS_EVENT_QUEST_LABEL"]     = "Wochenquest: %s",
+    ["BONUS_EVENT_QUEST_LOADING"]   = "wird geladen …",
+    ["BONUS_EVENT_QUEST_AVAILABLE"] = "Erhältlich bei Erzmagier Aethas Sonnenhäscher in Silbermond.",
+    ["BONUS_EVENT_QUEST_COMPLETED"] = "Diese Woche bereits abgeschlossen.",
+    ["BONUS_EVENT_QUEST_TURN_IN"]   = "Kann abgegeben werden.",
+    ["BONUS_EVENT_QUEST_PROGRESS"]  = "%d/%d abgeschlossen",
     -- Settings panel
     ["SETTINGS_CATEGORY_NAME"]         = "Mythic Plus Tracker",
     ["SETTINGS_SECTION_GENERAL_LABEL"] = "Allgemein",
@@ -138,6 +147,8 @@ local locale = {
     ["MINIMAP_BUTTON_STYLE_NORMAL"] = "Normal",
     ["SETTINGS_WELCOME_MESSAGE_LABEL"]  = "Willkommensnachricht anzeigen",
     ["SETTINGS_WELCOME_MESSAGE_TOOLTIP"] = "Zeigt oder versteckt die Mythic Plus Tracker Willkommensnachricht beim Login.",
+    ["SETTINGS_BONUS_EVENT_ICON_LABEL"]   = "Bonusereignis-Icon anzeigen",
+    ["SETTINGS_BONUS_EVENT_ICON_TOOLTIP"] = "Zeigt im Kopfbereich des Trackerfensters ein Icon an, solange das wöchentliche Bonusereignis für mythische Dungeons aktiv ist.",
 }
 
 for key, value in pairs(locale) do

@@ -91,6 +91,8 @@ globals = {
     "C_Traits",
     "C_DateAndTime",
     "C_GuildInfo",
+    "C_QuestLog",
+    "C_UnitAuras",
     "Enum",
 
     -- -----------------------------------------------------------------------

@@ -121,6 +121,15 @@ local locale = {
     ["TIME_MINUTES_AGO"] = "%d мин. назад",
     ["TIME_HOURS_AGO"]   = "%d ч. назад",
     ["TIME_DAYS_AGO"]    = "%d дн. назад",
+    -- Dungeon bonus event
+    ["BONUS_EVENT_TOOLTIP_TITLE"]   = "Бонусное событие подземелий",
+    ["BONUS_EVENT_ACTIVE"]          = "Бонусное событие этой недели награждает за мифические подземелья.",
+    ["BONUS_EVENT_QUEST_LABEL"]     = "Недельное задание: %s",
+    ["BONUS_EVENT_QUEST_LOADING"]   = "загрузка…",
+    ["BONUS_EVENT_QUEST_AVAILABLE"] = "Доступно у архимага Этаса Похитителя Солнца в Луносвете.",
+    ["BONUS_EVENT_QUEST_COMPLETED"] = "Уже выполнено на этой неделе.",
+    ["BONUS_EVENT_QUEST_TURN_IN"]   = "Готово к сдаче.",
+    ["BONUS_EVENT_QUEST_PROGRESS"]  = "%d/%d завершено",
     -- Settings panel
     ["SETTINGS_CATEGORY_NAME"]         = "Mythic Plus Tracker",
     ["SETTINGS_SECTION_GENERAL_LABEL"] = "Основное",
@@ -138,6 +147,8 @@ local locale = {
     ["MINIMAP_BUTTON_STYLE_NORMAL"] = "Обычный",
     ["SETTINGS_WELCOME_MESSAGE_LABEL"]  = "Показывать приветственное сообщение",
     ["SETTINGS_WELCOME_MESSAGE_TOOLTIP"] = "Отображает или скрывает приветственное сообщение Mythic Plus Tracker при входе в систему.",
+    ["SETTINGS_BONUS_EVENT_ICON_LABEL"]   = "Показывать значок бонусного события",
+    ["SETTINGS_BONUS_EVENT_ICON_TOOLTIP"] = "Показывает значок в заголовке окна трекера, пока активно недельное бонусное событие мифических подземелий.",
 }
 
 for key, value in pairs(locale) do

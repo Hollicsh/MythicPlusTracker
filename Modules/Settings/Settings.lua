@@ -112,6 +112,30 @@ local function createSettingsPanel()
     )
     Settings.CreateCheckbox(category, dashboardDefaultTabSetting, addon.locale["SETTINGS_DASHBOARD_DEFAULT_TAB_TOOLTIP"])
 
+    local function getBonusEventIconShown()
+        return not MythicPlusTrackerDB.bonusEventIconHidden
+    end
+
+    local function setBonusEventIconShown(value)
+        MythicPlusTrackerDB.bonusEventIconHidden = not value
+        MPT_Dashboard:refreshBonusEventIcon()
+    end
+
+    -- Proxy setting for the same two reasons as the minimap button above: the
+    -- stored flag is inverted, so a missing field (an older saved-variables
+    -- file) still means "shown", and the setter has to reach a tracker window
+    -- that may already be open behind the settings panel.
+    local bonusEventIconSetting = Settings.RegisterProxySetting(
+        category,
+        "MPT_ShowDungeonBonusEventIcon",
+        Settings.VarType.Boolean,
+        addon.locale["SETTINGS_BONUS_EVENT_ICON_LABEL"],
+        true,
+        getBonusEventIconShown,
+        setBonusEventIconShown
+    )
+    Settings.CreateCheckbox(category, bonusEventIconSetting, addon.locale["SETTINGS_BONUS_EVENT_ICON_TOOLTIP"])
+
     Settings.RegisterAddOnCategory(category)
 
     MPT_Settings.category = category

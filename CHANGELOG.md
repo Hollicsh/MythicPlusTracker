@@ -2,6 +2,14 @@
 
 All notable changes to MythicPlusTracker are documented here.
 
+## [1.4.1] - Unreleased
+
+### Added
+- **Bonus event indicator in the tracker window's header.** While the weekly Mythic dungeon bonus event is running — the week that grants the *Sign of the Warrior* buff — an icon appears at the right end of the tab bar, level with the tab labels. It carries this week's *Emissary of War* quest state in its glyph: an exclamation mark while there is something left to do, a question mark once all four dungeons are done and the quest only needs handing in, and a greyed-out mark after turn-in. Until then it pulses gently, holding still at full size while you hover it, and stops for good once the quest is turned in. Hovering says whether the quest is still waiting to be picked up and from whom, the dungeon progress the game itself reports while it sits in your log, that it is ready to hand in, or that it is already done. Outside a bonus event week there is no icon at all. It is a hint and deliberately not clickable: no API can accept a quest that an NPC isn't currently offering, so a click would have nothing to do. If a future patch re-issues the quest under a new ID, the icon keeps reporting the bonus event itself and simply stays silent about the quest instead of pointing at one that no longer exists. Can be switched off under Settings → Dashboard.
+
+### Fixed
+- **Crest currency amounts in the Sidebar turned green before the season cap was actually reached.** The color check also treated the currently-held quantity reaching the cap as "capped", but that quantity includes crests that never counted toward the cap in the first place — those from the crest exchange, for instance. A crest could therefore read as capped at 528 held while the game's own tooltip still showed 428/500 earned this season. The check now compares only the cap-relevant progress (`totalEarned` for season caps, this week's earnings for weekly ones) against its cap.
+
 ## [1.4.0] - 2026-09-08
 
 ### Added
