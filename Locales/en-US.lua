@@ -87,6 +87,7 @@ local locale = {
     ["SIDEBAR_RUNS_BEST_RUN"]    = "Best Run",
     ["SIDEBAR_RUNS_NO_RUNS"]     = "No successful M+ run yet.",
     ["SIDEBAR_RUNS_TIER_HEADER"] = "Timed Runs",
+    ["SIDEBAR_RUNS_TIER_HEADER_FILTERED"] = "%s (filtered)",
     ["SIDEBAR_GROUP_HEADER"]     = "Group",
     ["SIDEBAR_GROUP_NO_MEMBERS"] = "Not currently in a group.",
     -- Sidebar: Statistics tab (Keystones)

@@ -2,12 +2,16 @@
 
 All notable changes to MythicPlusTracker are documented here.
 
-## [1.4.1] - Unreleased
+## [1.5.0] - Unreleased
 
 ### Added
 - **Bonus event indicator in the tracker window's header.** While the weekly Mythic dungeon bonus event is running — the week that grants the *Sign of the Warrior* buff — an icon appears at the right end of the tab bar, level with the tab labels. It carries this week's *Emissary of War* quest state in its glyph: an exclamation mark while there is something left to do, a question mark once all four dungeons are done and the quest only needs handing in, and a greyed-out mark after turn-in. Until then it pulses gently, holding still at full size while you hover it, and stops for good once the quest is turned in. Hovering says whether the quest is still waiting to be picked up and from whom, the dungeon progress the game itself reports while it sits in your log, that it is ready to hand in, or that it is already done. Outside a bonus event week there is no icon at all. It is a hint and deliberately not clickable: no API can accept a quest that an NPC isn't currently offering, so a click would have nothing to do. If a future patch re-issues the quest under a new ID, the icon keeps reporting the bonus event itself and simply stays silent about the quest instead of pointing at one that no longer exists. Can be switched off under Settings → Dashboard.
 
+### Changed
+- **The Sidebar's Timed Runs breakdown now follows the Runs tab's filters.** Filtering the table to one dungeon used to leave the bracket counts next to it showing season-wide totals, so the two panels described different sets of runs. The breakdown now counts only what the table shows, and its header reads "Timed Runs (filtered)" while any filter is active. Best Run and the score above it deliberately do not follow the filter — Best Run stays the season's best as a fixed reference, and the score is Blizzard's season score rather than something derived from the local run history. The Runs tab's filter and the Sidebar's brackets also read one shared definition of the level ranges now, so the two can no longer disagree about where a bracket ends.
+
 ### Fixed
+- **The Runs tab had no scrollbar until a filter was touched**, even with far more runs than fit the window — rows simply ran off the bottom edge. The scrollbar learns its size from a scroll-range change, and the table's initial render was reporting that change *before* the scrollbar had been attached as a listener, so it never heard about it and hid itself; toggling any filter produced a second change that it did hear, which is why filtering and unfiltering appeared to fix it. The scrollbar is now wired up before the first render. Regression from 1.4.0, introduced alongside the Runs tab filters.
 - **Crest currency amounts in the Sidebar turned green before the season cap was actually reached.** The color check also treated the currently-held quantity reaching the cap as "capped", but that quantity includes crests that never counted toward the cap in the first place — those from the crest exchange, for instance. A crest could therefore read as capped at 528 held while the game's own tooltip still showed 428/500 earned this season. The check now compares only the cap-relevant progress (`totalEarned` for season caps, this week's earnings for weekly ones) against its cap.
 
 ## [1.4.0] - 2026-09-08

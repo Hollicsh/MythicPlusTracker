@@ -94,6 +94,7 @@ local locale = {
     ["SIDEBAR_RUNS_BEST_RUN"]    = "Mejor mazmorra",
     ["SIDEBAR_RUNS_NO_RUNS"]     = "Ninguna mazmorra M+ superada aún.",
     ["SIDEBAR_RUNS_TIER_HEADER"] = "Mazmorras a tiempo",
+    ["SIDEBAR_RUNS_TIER_HEADER_FILTERED"] = "%s (filtrado)",
     ["SIDEBAR_GROUP_HEADER"]     = "Grupo",
     ["SIDEBAR_GROUP_NO_MEMBERS"] = "Actualmente no estás en un grupo.",
     -- Sidebar: Statistics tab (Keystones)

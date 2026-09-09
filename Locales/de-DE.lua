@@ -91,6 +91,7 @@ local locale = {
     ["SIDEBAR_RUNS_BEST_RUN"]    = "Bester Durchlauf",
     ["SIDEBAR_RUNS_NO_RUNS"]     = "Noch kein erfolgreicher M+-Lauf.",
     ["SIDEBAR_RUNS_TIER_HEADER"] = "Zeitliche Durchläufe",
+    ["SIDEBAR_RUNS_TIER_HEADER_FILTERED"] = "%s (gefiltert)",
     ["SIDEBAR_GROUP_HEADER"]     = "Gruppe",
     ["SIDEBAR_GROUP_NO_MEMBERS"] = "Aktuell in keiner Gruppe.",
     -- Sidebar: Statistics tab (Keystones)

@@ -144,9 +144,14 @@ function addon.createTableScrollbar(outerFrame, scrollFrame, rowHeight)
     -- defaults the pan extent to 30px, independent of this table's row height).
     scrollFrame:SetPanExtent(rowHeight * 3)
 
-    -- scrollChild is already sized/populated by the caller before this runs,
-    -- so force one range recalculation now — otherwise OnScrollRangeChanged
-    -- never fires and the thumb stays full-size.
+    -- The scrollbar learns its size exclusively from OnScrollRangeChanged, and
+    -- that only fires when the range actually changes. So the first range
+    -- change has to happen at or after this point: either the caller has
+    -- already sized scrollChild and this recalculation produces it, or the
+    -- caller sizes it afterwards and produces it then. What breaks is a caller
+    -- that calls UpdateScrollChildRect itself *before* wiring — the range is
+    -- then already final, the recalculation below is a no-op, no event fires,
+    -- and SetHideIfUnscrollable above hides the bar for good.
     scrollFrame:UpdateScrollChildRect()
 
     return scrollBar

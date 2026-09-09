@@ -94,6 +94,7 @@ local locale = {
     ["SIDEBAR_RUNS_BEST_RUN"]    = "Meilleur donjon",
     ["SIDEBAR_RUNS_NO_RUNS"]     = "Aucun donjon M+ réussi.",
     ["SIDEBAR_RUNS_TIER_HEADER"] = "Donjons dans les temps",
+    ["SIDEBAR_RUNS_TIER_HEADER_FILTERED"] = "%s (filtré)",
     ["SIDEBAR_GROUP_HEADER"]     = "Groupe",
     ["SIDEBAR_GROUP_NO_MEMBERS"] = "Vous n'êtes actuellement pas en groupe.",
     -- Sidebar: Statistics tab (Keystones)

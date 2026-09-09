@@ -91,6 +91,7 @@ local locale = {
     ["SIDEBAR_RUNS_BEST_RUN"]    = "Лучшее прохождение",
     ["SIDEBAR_RUNS_NO_RUNS"]     = "Нет успешных прохождений М+.",
     ["SIDEBAR_RUNS_TIER_HEADER"] = "Прохождений вовремя",
+    ["SIDEBAR_RUNS_TIER_HEADER_FILTERED"] = "%s (фильтр)",
     ["SIDEBAR_GROUP_HEADER"]     = "Группа",
     ["SIDEBAR_GROUP_NO_MEMBERS"] = "Сейчас не в группе.",
     -- Sidebar: Statistics tab (Keystones)
