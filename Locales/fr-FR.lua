@@ -64,7 +64,8 @@ local locale = {
     ["DUNGEON_TOOLTIP_TIME_LIMIT"] = "Limite de temps",
     ["DUNGEON_TELEPORT_TOOLTIP"] = "Cliquez pour vous téléporter",
     ["DUNGEON_TELEPORT_NOT_OWNED"] = "Aucun jouet de téléportation connu ou possédé pour ce donjon",
-    ["DUNGEON_CURRENT_WEEK_ONLY"] = "Semaine en cours uniquement",
+    -- Shared by the Overview and Runs tabs' filter rows
+    ["FILTER_CURRENT_WEEK_ONLY"] = "Semaine en cours uniquement",
     -- Overview summary boxes
     ["DASHBOARD_SUMMARY_HIGHEST_KEY"]   = "Clé la plus élevée",
     ["DASHBOARD_SUMMARY_TOTAL_RUNS"]    = "Donjons totaux",

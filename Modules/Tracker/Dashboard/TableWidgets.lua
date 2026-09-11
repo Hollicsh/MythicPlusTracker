@@ -88,3 +88,45 @@ function addon.createTableScrollbar(outerFrame, scrollFrame, rowHeight)
 
     return scrollBar
 end
+
+---Creates a checkbox with a clickable text label to its left, for the filter
+---rows above the Dashboard tables. A plain FontString can't receive clicks, so
+---the label is its own Button (sized to the rendered text) — clicking the text
+---toggles the checkbox exactly like clicking the checkbox itself.
+---
+---The caller anchors the returned checkbox: the Overview and Runs tabs place
+---their filter rows differently. The size is a parameter for the same reason —
+---the Overview tab's row is deliberately squeezed (see the comment on its
+---WEEK_FILTER_ROW_H), the Runs tab's row has a dropdown's worth of height.
+---@param parent Frame
+---@param labelText string plain text; the coloring is applied here so both tabs match
+---@param size number edge length of the square checkbox, also the label's height
+---@param initialChecked boolean
+---@param onChanged function(checked) runs after every toggle, from either half
+---@return CheckButton
+function addon.createLabeledCheckbox(parent, labelText, size, initialChecked, onChanged)
+    local checkbox = CreateFrame("CheckButton", nil, parent, "UICheckButtonTemplate")
+    checkbox:SetSize(size, size)
+    checkbox:SetChecked(initialChecked)
+
+    checkbox:SetScript("OnClick", function(self)
+        onChanged(self:GetChecked() == true)
+    end)
+
+    local labelButton = CreateFrame("Button", nil, parent)
+    labelButton:SetHeight(size)
+    labelButton:SetPoint("RIGHT", checkbox, "LEFT", -4, 0)
+
+    local label = labelButton:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
+    label:SetPoint("RIGHT", labelButton, "RIGHT", 0, 0)
+    label:SetText(addon.colors.POOR .. labelText .. addon.colors.RESET)
+
+    labelButton:SetWidth(label:GetStringWidth())
+    labelButton:SetScript("OnClick", function()
+        local checked = not checkbox:GetChecked()
+        checkbox:SetChecked(checked)
+        onChanged(checked)
+    end)
+
+    return checkbox
+end

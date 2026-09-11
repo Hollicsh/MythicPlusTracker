@@ -61,7 +61,8 @@ local locale = {
     ["DUNGEON_TOOLTIP_TIME_LIMIT"] = "Ограничение по времени",
     ["DUNGEON_TELEPORT_TOOLTIP"] = "Нажмите, чтобы телепортироваться",
     ["DUNGEON_TELEPORT_NOT_OWNED"] = "Нет известной или имеющейся игрушки-телепорта для этого подземелья",
-    ["DUNGEON_CURRENT_WEEK_ONLY"] = "Только текущая неделя",
+    -- Shared by the Overview and Runs tabs' filter rows
+    ["FILTER_CURRENT_WEEK_ONLY"] = "Только текущая неделя",
     -- Overview summary boxes
     ["DASHBOARD_SUMMARY_HIGHEST_KEY"]   = "Наивысший ключ",
     ["DASHBOARD_SUMMARY_TOTAL_RUNS"]    = "Всего прохождений",

@@ -64,7 +64,8 @@ local locale = {
     ["DUNGEON_TOOLTIP_TIME_LIMIT"] = "Límite de tiempo",
     ["DUNGEON_TELEPORT_TOOLTIP"] = "Haz clic para teletransportarte",
     ["DUNGEON_TELEPORT_NOT_OWNED"] = "No se conoce ni se posee ningún juguete de teletransporte para esta mazmorra",
-    ["DUNGEON_CURRENT_WEEK_ONLY"] = "Solo la semana actual",
+    -- Shared by the Overview and Runs tabs' filter rows
+    ["FILTER_CURRENT_WEEK_ONLY"] = "Solo la semana actual",
     -- Overview summary boxes
     ["DASHBOARD_SUMMARY_HIGHEST_KEY"]   = "Llave más alta",
     ["DASHBOARD_SUMMARY_TOTAL_RUNS"]    = "Mazmorras totales",

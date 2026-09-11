@@ -57,7 +57,8 @@ local locale = {
     ["DUNGEON_TOOLTIP_TIME_LIMIT"] = "Time Limit",
     ["DUNGEON_TELEPORT_TOOLTIP"] = "Click to teleport",
     ["DUNGEON_TELEPORT_NOT_OWNED"] = "No teleport toy known or owned for this dungeon",
-    ["DUNGEON_CURRENT_WEEK_ONLY"] = "Current week only",
+    -- Shared by the Overview and Runs tabs' filter rows
+    ["FILTER_CURRENT_WEEK_ONLY"] = "Current week only",
     -- Overview summary boxes
     ["DASHBOARD_SUMMARY_HIGHEST_KEY"]   = "Highest Keystone",
     ["DASHBOARD_SUMMARY_TOTAL_RUNS"]    = "Total Runs",

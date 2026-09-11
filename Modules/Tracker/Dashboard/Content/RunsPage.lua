@@ -15,6 +15,9 @@ local FILTER_DROPDOWN_W      = 108
 local FILTER_DROPDOWN_H      = 26  -- fixed height of WowStyle1DropdownTemplate
 local FILTER_DROPDOWN_MARGIN = 6
 local FILTER_DROPDOWN_GAP    = 8
+-- Smaller than the dropdowns next to it: UICheckButtonTemplate draws a wide
+-- frame around its box, so matching FILTER_DROPDOWN_H makes it tower over them.
+local FILTER_CHECKBOX_SIZE   = 20
 
 -- Fixed column widths sized to fit their header text (name column is computed dynamically)
 local COL_W = {
@@ -312,17 +315,19 @@ local function createFilterDropdown(parent, anchorFrame, anchorToNav, staticLabe
     return dropdown
 end
 
----Creates the Dungeon / Timed / Stufen-Bracket filter dropdowns, left to
----right, right-aligned above the table. Selections live in
----addon.RunsFilterService (persisted account-wide); onFilterChanged runs after
----every toggle and does a row-only re-render (see renderFilteredRows) plus a
----Sidebar refresh, since the Sidebar's Timed Runs breakdown mirrors the same
----filter — see Sidebar/Content/RunStatisticsCard.lua. Best Run there stays
----season-wide on purpose.
+---Creates the filter row above the table, right-aligned: the "current week
+---only" checkbox, then the Dungeon / Timed / Stufen-Bracket dropdowns. All
+---selections live in addon.RunsFilterService — the three dropdowns persist
+---account-wide, the checkbox deliberately only for the session (see the
+---service). onFilterChanged runs after every toggle and does a row-only
+---re-render (see renderFilteredRows) plus a Sidebar refresh, since the
+---Sidebar's Timed Runs breakdown mirrors the same filter — see
+---Sidebar/Content/RunStatisticsCard.lua. Best Run there stays season-wide on
+---purpose.
 ---@param frame Frame the tab's content panel
 ---@param dungeons table array of mapChallengeModeIDs, from C_ChallengeMode.GetMapTable()
 ---@param onFilterChanged function
-local function createRunsFilterDropdowns(frame, dungeons, onFilterChanged)
+local function createRunsFilters(frame, dungeons, onFilterChanged)
     local levelDropdown = createFilterDropdown(frame, MPT_Dashboard.navFrame, true,
         addon.locale["RUN_COL_LEVEL"],
         function() return RunsFilterService:countSelected(DIMENSIONS.LEVEL_BRACKETS) end,
@@ -355,7 +360,7 @@ local function createRunsFilterDropdowns(frame, dungeons, onFilterChanged)
             end
         end)
 
-    createFilterDropdown(frame, timedDropdown, false,
+    local dungeonDropdown = createFilterDropdown(frame, timedDropdown, false,
         addon.locale["RUN_COL_DUNGEON"],
         function() return RunsFilterService:countSelected(DIMENSIONS.DUNGEONS) end,
         function(rootDescription)
@@ -369,6 +374,20 @@ local function createRunsFilterDropdowns(frame, dungeons, onFilterChanged)
                     end)
             end
         end)
+
+    -- Initial state comes from the service, not from a local: loadRuns runs
+    -- again on every tab reselect, and the checkbox has to come back checked
+    -- for as long as the session's filter says so.
+    local weekCheckbox = addon.createLabeledCheckbox(frame,
+        addon.locale["FILTER_CURRENT_WEEK_ONLY"],
+        FILTER_CHECKBOX_SIZE,
+        RunsFilterService:isCurrentWeekOnly(),
+        function(checked)
+            RunsFilterService:setCurrentWeekOnly(checked)
+            onFilterChanged()
+        end)
+
+    weekCheckbox:SetPoint("RIGHT", dungeonDropdown, "LEFT", -FILTER_DROPDOWN_GAP, 0)
 end
 
 function MPT_Dashboard:loadRuns(frame)
@@ -453,7 +472,7 @@ function MPT_Dashboard:loadRuns(frame)
     -- final value, so the scrollbar never heard about it and hid itself.
     addon.createTableScrollbar(outerFrame, scrollFrame, ROW_H)
 
-    createRunsFilterDropdowns(frame, dungeons, function()
+    createRunsFilters(frame, dungeons, function()
         renderFilteredRows(scrollFrame, scrollChild, scrollChildW, runHistory, colX, nameW, scoreDeltas)
 
         -- Deliberately only the Sidebar, never a full tab reload: reloading the

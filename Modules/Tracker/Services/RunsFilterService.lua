@@ -36,6 +36,14 @@ addon.RunsFilterService.LEVEL_BRACKETS = {
 local DIMENSIONS   = addon.RunsFilterService.DIMENSIONS
 local TIMED_STATES = addon.RunsFilterService.TIMED_STATES
 
+---"Only the current reset week" is a boolean, not a set of selected values, so
+---it lives outside the DIMENSIONS sets above rather than being bent into their
+---shape. It is also deliberately *not* persisted: unlike the three dropdowns,
+---this one starts cleared on every login and /reload, so a week-narrowed view
+---never outlives the session that asked for it. That means no SavedVariables
+---field, and no schema change to MythicPlusTrackerDB.
+local currentWeekOnly = false
+
 ---SavedVariables lazy-init for the Runs tab's filter selections. Each set is
 ---keyed by the filtered value (mapID / "timed"|"untimed" / bracket key) with
 ---value true; an empty set means "no filter applied, show everything".
@@ -99,10 +107,24 @@ function addon.RunsFilterService:toggle(dimension, key)
     end
 end
 
+---@return boolean whether the run list is limited to the current reset week
+function addon.RunsFilterService:isCurrentWeekOnly()
+    return currentWeekOnly
+end
+
+---@param enabled boolean
+function addon.RunsFilterService:setCurrentWeekOnly(enabled)
+    currentWeekOnly = enabled == true
+end
+
 ---Whether any dimension currently narrows the run list. Consumers use this to
 ---label themselves as filtered.
 ---@return boolean
 function addon.RunsFilterService:hasActiveFilter()
+    if currentWeekOnly then
+        return true
+    end
+
     for _, dimension in pairs(DIMENSIONS) do
         if self:countSelected(dimension) > 0 then
             return true
@@ -117,6 +139,15 @@ end
 ---@return boolean
 function addon.RunsFilterService:isRunIncluded(run)
     local runsFilter = ensureInitialized()
+
+    if currentWeekOnly then
+        -- A run whose completionDate is missing or malformed can't be placed in
+        -- a week, so it can't be shown as belonging to this one.
+        local timestamp = addon.completionDateToTimestamp(run.completionDate)
+        if not timestamp or timestamp < addon.getCurrentWeekStartTime() then
+            return false
+        end
+    end
 
     if self:countSelected(DIMENSIONS.DUNGEONS) > 0
             and not runsFilter[DIMENSIONS.DUNGEONS][run.mapChallengeModeID] then
