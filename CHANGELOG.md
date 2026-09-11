@@ -2,7 +2,7 @@
 
 All notable changes to MythicPlusTracker are documented here.
 
-## [1.5.0] - Unreleased
+## [1.5.0] - 2026-09-11
 
 ### Added
 - **Quick teleport strip at the minimap button.** Hovering the button unrolls a strip of the season dungeons you own the "Path of ..." teleport for — click an icon to cast it. Unrolls sideways or vertically; switch it off or change its delay under Settings → Minimap.
