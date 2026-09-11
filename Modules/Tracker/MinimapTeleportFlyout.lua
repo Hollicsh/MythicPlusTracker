@@ -120,7 +120,7 @@ local function getOrientation()
     local orientation = ensureFlyoutState().minimapTeleportFlyoutOrientation
 
     if orientation ~= ORIENTATIONS.VERTICAL then
-        return ORIENTATIONS.HORIZONTAL
+        return DEFAULT_ORIENTATION
     end
 
     return ORIENTATIONS.VERTICAL
