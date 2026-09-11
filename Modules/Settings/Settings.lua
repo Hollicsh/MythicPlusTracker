@@ -116,6 +116,93 @@ local function createSettingsPanel()
         return not MythicPlusTrackerDB.bonusEventIconHidden
     end
 
+    -- Both flyout settings are proxies: the stored flag is inverted (as with
+    -- the minimap button above) and the delay has to reach the live frame so a
+    -- hover timer that is already counting down gets dropped.
+    local function getTeleportFlyoutShown()
+        return MPT_MinimapTeleportFlyout:isEnabled()
+    end
+
+    local function setTeleportFlyoutShown(value)
+        MPT_MinimapTeleportFlyout:setEnabled(value)
+    end
+
+    local teleportFlyoutSetting = Settings.RegisterProxySetting(
+        category,
+        "MPT_ShowMinimapTeleportFlyout",
+        Settings.VarType.Boolean,
+        addon.locale["SETTINGS_MINIMAP_TELEPORT_FLYOUT_LABEL"],
+        true,
+        getTeleportFlyoutShown,
+        setTeleportFlyoutShown
+    )
+    Settings.CreateCheckbox(category, teleportFlyoutSetting, addon.locale["SETTINGS_MINIMAP_TELEPORT_FLYOUT_TOOLTIP"])
+
+    local function getTeleportFlyoutOrientation()
+        return MPT_MinimapTeleportFlyout:getOrientation()
+    end
+
+    local function setTeleportFlyoutOrientation(value)
+        MPT_MinimapTeleportFlyout:setOrientation(value)
+    end
+
+    local function getTeleportFlyoutOrientationOptions()
+        local container = Settings.CreateControlTextContainer()
+        container:Add("horizontal", addon.locale["TELEPORT_FLYOUT_ORIENTATION_HORIZONTAL"])
+        container:Add("vertical", addon.locale["TELEPORT_FLYOUT_ORIENTATION_VERTICAL"])
+        return container:GetData()
+    end
+
+    local teleportFlyoutOrientationSetting = Settings.RegisterProxySetting(
+        category,
+        "MPT_MinimapTeleportFlyoutOrientation",
+        Settings.VarType.String,
+        addon.locale["SETTINGS_MINIMAP_TELEPORT_FLYOUT_ORIENTATION_LABEL"],
+        "horizontal",
+        getTeleportFlyoutOrientation,
+        setTeleportFlyoutOrientation
+    )
+    Settings.CreateDropdown(
+        category,
+        teleportFlyoutOrientationSetting,
+        getTeleportFlyoutOrientationOptions,
+        addon.locale["SETTINGS_MINIMAP_TELEPORT_FLYOUT_ORIENTATION_TOOLTIP"]
+    )
+
+    local function getTeleportFlyoutDelay()
+        return MPT_MinimapTeleportFlyout:getHoverDelay()
+    end
+
+    local function setTeleportFlyoutDelay(value)
+        MPT_MinimapTeleportFlyout:setHoverDelay(value)
+    end
+
+    local minimumDelay, maximumDelay, delayStep, defaultDelay = MPT_MinimapTeleportFlyout:getHoverDelayBounds()
+
+    local teleportFlyoutDelaySetting = Settings.RegisterProxySetting(
+        category,
+        "MPT_MinimapTeleportFlyoutDelay",
+        Settings.VarType.Number,
+        addon.locale["SETTINGS_MINIMAP_TELEPORT_FLYOUT_DELAY_LABEL"],
+        defaultDelay,
+        getTeleportFlyoutDelay,
+        setTeleportFlyoutDelay
+    )
+    -- Without a label formatter the slider renders as a bare track, with no way
+    -- to tell 0.5s from 3s. Right is where Blizzard's own sliders put the
+    -- current value.
+    local delaySliderOptions = Settings.CreateSliderOptions(minimumDelay, maximumDelay, delayStep)
+    delaySliderOptions:SetLabelFormatter(MinimalSliderWithSteppersMixin.Label.Right, function(value)
+        return addon.formatSeconds(value)
+    end)
+
+    Settings.CreateSlider(
+        category,
+        teleportFlyoutDelaySetting,
+        delaySliderOptions,
+        addon.locale["SETTINGS_MINIMAP_TELEPORT_FLYOUT_DELAY_TOOLTIP"]
+    )
+
     local function setBonusEventIconShown(value)
         MythicPlusTrackerDB.bonusEventIconHidden = not value
         MPT_Dashboard:refreshBonusEventIcon()

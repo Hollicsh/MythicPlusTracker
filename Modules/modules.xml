@@ -4,6 +4,9 @@
     <Script file='Tracker\DungeonBonusEvent.lua'/>
     <Script file='Tracker\MainFrame.lua'/>
 
+    <Script file='Tracker\DungeonTeleportCatalog.lua'/>
+    <Script file='Tracker\DungeonTeleportWidgets.lua'/>
+
     <Script file='Tracker\Services\AltKeystoneService.lua'/>
     <Script file='Tracker\Services\RunHistoryService.lua'/>
     <Script file='Tracker\Services\RunsFilterService.lua'/>
@@ -15,7 +18,6 @@
     <Script file='Tracker\Dashboard\DashboardNavigation.lua'/>
     <Script file='Tracker\Dashboard\TableWidgets.lua'/>
     <Script file='Tracker\Dashboard\Services\TableSortService.lua'/>
-    <Script file='Tracker\Dashboard\DungeonTeleportCatalog.lua'/>
     <Script file='Tracker\Dashboard\Content\NotMaxLevelPage.lua'/>
     <Script file='Tracker\Dashboard\Content\DungeonsPage.lua'/>
     <Script file='Tracker\Dashboard\Content\RunsPage.lua'/>
@@ -33,6 +35,7 @@
     <Script file='Tracker\Sidebar\Content\KeystoneStatisticsCard.lua'/>
 
     <Script file='Tracker\MinimapButton.lua'/>
+    <Script file='Tracker\MinimapTeleportFlyout.lua'/>
 
     <Script file='Settings\Settings.lua'/>
 
