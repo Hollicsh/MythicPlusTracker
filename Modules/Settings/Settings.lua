@@ -4,6 +4,16 @@ MPT_Settings = {}
 
 MythicPlusTrackerDB = MythicPlusTrackerDB or {}
 
+-- Every setting below is registered with Settings.RegisterProxySetting, and
+-- that is structural rather than a matter of taste: RegisterAddOnSetting holds
+-- on to the *table* it is handed at registration time. This function runs at
+-- file scope, before WoW has restored the SavedVariables, so the table it would
+-- capture is the throwaway {} from the MythicPlusTrackerDB = ... or {} line at
+-- the top of this file. WoW then replaces the global with the loaded one, and
+-- every write the Settings API makes lands in an orphan nothing else reads --
+-- which is exactly how the "default to Keystones in a group" option managed to
+-- do nothing at all from 1.4.0 on. Proxy getters/setters resolve the global by
+-- name when they run, so they always reach the current table.
 local function createSettingsPanel()
     local category, layout = Settings.RegisterVerticalLayoutCategory(addon.locale["SETTINGS_CATEGORY_NAME"])
 
@@ -20,9 +30,9 @@ local function createSettingsPanel()
         MythicPlusTrackerDB.welcomeMessageDisabled = not value
     end
 
-    -- RegisterProxySetting (rather than RegisterAddOnSetting) is used here
-    -- because the stored flag is inverted (welcomeMessageDisabled) relative
-    -- to what the checkbox displays (welcome message shown).
+    -- Proxy for the reason given above the function, and a second one here: the
+    -- stored flag is inverted (welcomeMessageDisabled) relative to what the
+    -- checkbox displays (welcome message shown).
     local welcomeMessageSetting = Settings.RegisterProxySetting(
         category,
         "MPT_ShowWelcomeMessage",
@@ -34,18 +44,25 @@ local function createSettingsPanel()
     )
     Settings.CreateCheckbox(category, welcomeMessageSetting, addon.locale["SETTINGS_WELCOME_MESSAGE_TOOLTIP"])
 
-    local debugSetting = Settings.RegisterAddOnSetting(
+    local function getDebugMode()
+        return addon.isDebugMode()
+    end
+
+    -- Also writes the value through to SavedVariables and prints the on/off
+    -- message, so display state and stored state cannot drift apart.
+    local function setDebugMode(value)
+        addon.setDebugMode(value)
+    end
+
+    local debugSetting = Settings.RegisterProxySetting(
         category,
         "MPT_DebugMode",
-        "debugMode",
-        MythicPlusTrackerDB,
         Settings.VarType.Boolean,
         addon.locale["SETTINGS_DEBUG_MODE_LABEL"],
-        false
+        false,
+        getDebugMode,
+        setDebugMode
     )
-    debugSetting:SetValueChangedCallback(function(setting, value)
-        addon.setDebugMode(value)
-    end)
     Settings.CreateCheckbox(category, debugSetting, addon.locale["SETTINGS_DEBUG_MODE_TOOLTIP"])
 
     layout:AddInitializer(Settings.CreateElementInitializer("SettingsListSectionHeaderTemplate", { name = addon.locale["SETTINGS_SECTION_MINIMAP_LABEL"] }))
@@ -98,23 +115,6 @@ local function createSettingsPanel()
         setMinimapButtonStyle
     )
     Settings.CreateDropdown(category, minimapStyleSetting, getMinimapButtonStyleOptions, addon.locale["SETTINGS_MINIMAP_BUTTON_STYLE_TOOLTIP"])
-
-    layout:AddInitializer(Settings.CreateElementInitializer("SettingsListSectionHeaderTemplate", { name = addon.locale["SETTINGS_SECTION_DASHBOARD_LABEL"] }))
-
-    local dashboardDefaultTabSetting = Settings.RegisterAddOnSetting(
-        category,
-        "MPT_DashboardDefaultTabInGroup",
-        "dashboardDefaultTabInGroup",
-        MythicPlusTrackerDB,
-        Settings.VarType.Boolean,
-        addon.locale["SETTINGS_DASHBOARD_DEFAULT_TAB_LABEL"],
-        false
-    )
-    Settings.CreateCheckbox(category, dashboardDefaultTabSetting, addon.locale["SETTINGS_DASHBOARD_DEFAULT_TAB_TOOLTIP"])
-
-    local function getBonusEventIconShown()
-        return not MythicPlusTrackerDB.bonusEventIconHidden
-    end
 
     -- Both flyout settings are proxies: the stored flag is inverted (as with
     -- the minimap button above) and the delay has to reach the live frame so a
@@ -202,6 +202,34 @@ local function createSettingsPanel()
         delaySliderOptions,
         addon.locale["SETTINGS_MINIMAP_TELEPORT_FLYOUT_DELAY_TOOLTIP"]
     )
+
+    layout:AddInitializer(Settings.CreateElementInitializer("SettingsListSectionHeaderTemplate", { name = addon.locale["SETTINGS_SECTION_DASHBOARD_LABEL"] }))
+
+    -- Proxy for the orphaned-table reason spelled out at the debug setting
+    -- above. No value-changed callback is needed: Dashboard.lua reads this flag
+    -- fresh on every OnShow, so the next time the window opens it is current.
+    local function getDashboardDefaultTabInGroup()
+        return MythicPlusTrackerDB.dashboardDefaultTabInGroup == true
+    end
+
+    local function setDashboardDefaultTabInGroup(value)
+        MythicPlusTrackerDB.dashboardDefaultTabInGroup = value
+    end
+
+    local dashboardDefaultTabSetting = Settings.RegisterProxySetting(
+        category,
+        "MPT_DashboardDefaultTabInGroup",
+        Settings.VarType.Boolean,
+        addon.locale["SETTINGS_DASHBOARD_DEFAULT_TAB_LABEL"],
+        false,
+        getDashboardDefaultTabInGroup,
+        setDashboardDefaultTabInGroup
+    )
+    Settings.CreateCheckbox(category, dashboardDefaultTabSetting, addon.locale["SETTINGS_DASHBOARD_DEFAULT_TAB_TOOLTIP"])
+
+    local function getBonusEventIconShown()
+        return not MythicPlusTrackerDB.bonusEventIconHidden
+    end
 
     local function setBonusEventIconShown(value)
         MythicPlusTrackerDB.bonusEventIconHidden = not value
