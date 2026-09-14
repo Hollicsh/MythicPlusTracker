@@ -46,6 +46,12 @@ ignore = {
 
 globals = {
     -- -----------------------------------------------------------------------
+    -- LibStub, when some other addon provides it. Never shipped by this addon;
+    -- see Modules/Tracker/Services/ExternalKeystoneService.lua.
+    -- -----------------------------------------------------------------------
+    "LibStub",
+
+    -- -----------------------------------------------------------------------
     -- Addon-specific module globals (MPT_* pattern)
     -- -----------------------------------------------------------------------
     "MPT_Dashboard",
