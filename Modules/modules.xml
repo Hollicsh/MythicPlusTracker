@@ -6,6 +6,7 @@
 
     <Script file='Tracker\DungeonTeleportCatalog.lua'/>
     <Script file='Tracker\DungeonTeleportWidgets.lua'/>
+    <Script file='Tracker\DungeonJournalWidgets.lua'/>
 
     <Script file='Tracker\Services\AltKeystoneService.lua'/>
     <Script file='Tracker\Services\RunHistoryService.lua'/>

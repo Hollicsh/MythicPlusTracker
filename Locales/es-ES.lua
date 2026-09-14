@@ -64,6 +64,7 @@ local locale = {
     ["DUNGEON_TOOLTIP_TIME_LIMIT"] = "Límite de tiempo",
     ["DUNGEON_TELEPORT_TOOLTIP"] = "Haz clic para teletransportarte",
     ["DUNGEON_TELEPORT_NOT_OWNED"] = "No se conoce ni se posee ningún juguete de teletransporte para esta mazmorra",
+    ["DUNGEON_JOURNAL_TOOLTIP"] = "Haz clic para abrir la Guía de aventuras",
     -- Shared by the Overview and Runs tabs' filter rows
     ["FILTER_CURRENT_WEEK_ONLY"] = "Solo la semana actual",
     -- Overview summary boxes
@@ -123,6 +124,7 @@ local locale = {
     ["KEYSTONES_TOOLTIP_EXTERNAL_TITLE"] = "Fuente externa",
     ["KEYSTONES_TOOLTIP_EXTERNAL_SYNC"] = "Sync mediante LibKeystone",
     ["KEYSTONES_TOOLTIP_EXTERNAL_RECEIVED"] = "Recibido: %s",
+    ["KEYSTONES_TOOLTIP_PLAYER_MENU"] = "Haz clic para ver las opciones del jugador",
     ["TIME_UNKNOWN"]     = "desconocido",
     ["TIME_JUST_NOW"]    = "justo ahora",
     ["FORMAT_SECONDS"] = "%s s",

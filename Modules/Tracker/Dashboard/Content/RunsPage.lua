@@ -176,7 +176,8 @@ local function createRow(parent, run, colX, nameW, rowY, isLast, scoreDeltas)
         icon:SetTexture(texture)
     end
 
-    addon.createTableCell(parent, colX["name"], rowY, nameW, ROW_H, name, "GameFontHighlight", "LEFT")
+    local nameCell = addon.createTableCell(parent, colX["name"], rowY, nameW, ROW_H, name, "GameFontHighlight", "LEFT")
+    addon.attachDungeonJournalLink(parent, nameCell, mapID, name, colX["name"], rowY, nameW, ROW_H)
 
     addon.createTableCell(parent, colX["level"], rowY, COL_W.level, ROW_H,
         formatLevel(run.level), "GameFontHighlight", "RIGHT")

@@ -199,7 +199,10 @@ local function createTableRow(child, mapID, colX, rowY, nameW, runLookup, isLast
     addon.attachDungeonTeleportButton(child, icon, mapID, name,
         colX["icon"] + 2, rowY - (ROW_H - ICON_SIZE) / 2, ICON_SIZE)
 
-    addon.createTableCell(child, colX["name"], rowY, nameW, ROW_H, name, "GameFontHighlight", "LEFT")
+    -- Icon teleports, name opens the Adventure Guide — the same split in every
+    -- view that lists dungeons.
+    local nameCell = addon.createTableCell(child, colX["name"], rowY, nameW, ROW_H, name, "GameFontHighlight", "LEFT")
+    addon.attachDungeonJournalLink(child, nameCell, mapID, name, colX["name"], rowY, nameW, ROW_H)
 
     addon.createTableCell(child, colX["bestLevel"], rowY, COL_W.bestLevel, ROW_H,
         formatLevel(ri and ri.bestLevel), "GameFontHighlight", "RIGHT")

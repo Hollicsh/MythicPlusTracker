@@ -32,6 +32,45 @@ function addon.createRowDivider(parent, y, alpha)
     return line
 end
 
+---Creates an invisible, clickable button over a rectangle of `parent`. A
+---FontString can't receive mouse events on its own, and the table views lay
+---their cells out directly on the scroll child without per-row frames, so a
+---clickable label always needs an overlay like this.
+---
+---The click-area twin of addon.createTableCellHoverArea (Dashboard/TableWidgets.lua),
+---which only does hover. It lives here rather than next to that one because a
+---Sidebar card uses it too, and Core loads before every module.
+---
+---Only the mechanics are shared: the caller owns what the click does and what
+---the tooltip says. onLeave defaults to hiding the tooltip, which is what a
+---caller that only shows one wants.
+---@param parent Frame the frame the label was laid out in
+---@param x number top-left X offset within parent
+---@param y number top-left Y offset within parent
+---@param w number
+---@param h number
+---@param onClick function receives the button frame
+---@param onEnter function|nil receives the button frame, expected to show GameTooltip
+---@param onLeave function|nil defaults to hiding GameTooltip
+---@return Button
+function addon.createClickArea(parent, x, y, w, h, onClick, onEnter, onLeave)
+    local clickArea = CreateFrame("Button", nil, parent)
+    clickArea:SetSize(w, h)
+    clickArea:SetPoint("TOPLEFT", parent, "TOPLEFT", x, y)
+    clickArea:RegisterForClicks("LeftButtonUp")
+    clickArea:SetScript("OnClick", onClick)
+
+    if onEnter then
+        clickArea:SetScript("OnEnter", onEnter)
+    end
+
+    clickArea:SetScript("OnLeave", onLeave or function()
+        GameTooltip:Hide()
+    end)
+
+    return clickArea
+end
+
 ---Creates a themed background + border pair for a top-level addon window
 ---(Dashboard, Sidebar), with the border guaranteed to render above ALL of the
 ---frame's content regardless of how deeply that content is nested. Plain

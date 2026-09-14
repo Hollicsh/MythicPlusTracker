@@ -61,6 +61,7 @@ local locale = {
     ["DUNGEON_TOOLTIP_TIME_LIMIT"] = "Ограничение по времени",
     ["DUNGEON_TELEPORT_TOOLTIP"] = "Нажмите, чтобы телепортироваться",
     ["DUNGEON_TELEPORT_NOT_OWNED"] = "Нет известной или имеющейся игрушки-телепорта для этого подземелья",
+    ["DUNGEON_JOURNAL_TOOLTIP"] = "Нажмите, чтобы открыть Путеводитель",
     -- Shared by the Overview and Runs tabs' filter rows
     ["FILTER_CURRENT_WEEK_ONLY"] = "Только текущая неделя",
     -- Overview summary boxes
@@ -123,6 +124,7 @@ local locale = {
     ["KEYSTONES_TOOLTIP_EXTERNAL_TITLE"] = "Внешний источник",
     ["KEYSTONES_TOOLTIP_EXTERNAL_SYNC"] = "Синхронизация через LibKeystone",
     ["KEYSTONES_TOOLTIP_EXTERNAL_RECEIVED"] = "Получено: %s",
+    ["KEYSTONES_TOOLTIP_PLAYER_MENU"] = "Нажмите для действий с игроком",
     ["TIME_UNKNOWN"]     = "неизвестно",
     ["TIME_JUST_NOW"]    = "только что",
     ["FORMAT_SECONDS"] = "%s сек.",

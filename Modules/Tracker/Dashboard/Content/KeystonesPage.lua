@@ -393,6 +393,45 @@ local function createHeader(parent, colX, nameW, dungeonW, onSort)
     addon.createRowDivider(parent, -HEADER_H, 0.5)
 end
 
+---Opens the same menu a right-click on a Blizzard group frame shows for that
+---player — whisper, set focus, raid target icon, and whatever else other addons
+---have added to it.
+---
+---Rows are built once per render and the token is captured then, so it can be
+---stale by the time it is clicked: the group may have changed. Re-checking the
+---unit against the name the row was drawn with keeps the menu from acting on
+---whoever moved into that slot in the meantime.
+---@param unitToken string
+---@param renderedName string|nil the name this row was drawn with
+local function openPlayerMenu(unitToken, renderedName)
+    if not UnitExists(unitToken) or UnitName(unitToken) ~= renderedName then
+        return
+    end
+
+    local menuType
+    if UnitIsUnit(unitToken, "player") then
+        menuType = "SELF"
+    elseif UnitInRaid(unitToken) then
+        menuType = "RAID_PLAYER"
+    elseif UnitInParty(unitToken) then
+        menuType = "PARTY"
+    else
+        return
+    end
+
+    -- FrameXML, not a documented API. Guarded so a future Blizzard rename
+    -- degrades to "the name just isn't clickable" instead of an error.
+    if not UnitPopup_OpenMenu then
+        addon.debugMessage("KeystonesPage: UnitPopup_OpenMenu unavailable, player menu disabled")
+        return
+    end
+
+    local succeeded, menuError = pcall(UnitPopup_OpenMenu, menuType, { unit = unitToken })
+    if not succeeded then
+        addon.debugMessage("KeystonesPage: opening the player menu failed: " .. tostring(menuError))
+    end
+end
+
 ---Shared by both the Group row (live unit) and the Alts row (saved entry).
 ---@param parent Frame
 ---@param colX table
@@ -400,7 +439,10 @@ end
 ---@param rowY number
 ---@param name string|nil
 ---@param englishClass string|nil
-local function createNameAndClassCell(parent, colX, nameW, rowY, name, englishClass)
+---@param unitToken string|nil Group mode only; makes the name open the player
+---menu. Alts and Guild rows have no live unit to point a menu at, so their
+---names stay inert.
+local function createNameAndClassCell(parent, colX, nameW, rowY, name, englishClass, unitToken)
     local nameText = parent:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
     nameText:SetSize(nameW, ROW_H)
     nameText:SetPoint("TOPLEFT", parent, "TOPLEFT", colX["name"], rowY)
@@ -420,6 +462,29 @@ local function createNameAndClassCell(parent, colX, nameW, rowY, name, englishCl
         classIcon:SetPoint("TOPLEFT", parent, "TOPLEFT",
             colX["classIcon"], rowY - (ROW_H - COL_W.classIcon) / 2)
     end
+
+    if not unitToken then
+        return
+    end
+
+    local nameR, nameG, nameB, nameA = nameText:GetTextColor()
+
+    addon.createClickArea(parent, colX["name"], rowY, nameW, ROW_H,
+        function()
+            openPlayerMenu(unitToken, name)
+        end,
+        function(self)
+            nameText:SetTextColor(1, 1, 1, 1)
+
+            GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+            GameTooltip:SetText(name or "?", nameR, nameG, nameB, 1)
+            addPoorLabelLine(addon.locale["KEYSTONES_TOOLTIP_PLAYER_MENU"])
+            GameTooltip:Show()
+        end,
+        function()
+            nameText:SetTextColor(nameR, nameG, nameB, nameA)
+            GameTooltip:Hide()
+        end)
 end
 
 ---The marker suffix for a value that came from LibKeystone. Muted and placed
@@ -499,13 +564,21 @@ local function createDungeonAndLevelCell(parent, colX, dungeonW, rowY, mapID, le
             end
         end
 
+        local dungeonTextX = colX["dungeon"] + DUNGEON_ICON_SIZE + COL_GAP
+        local dungeonTextW = dungeonW - DUNGEON_ICON_SIZE - COL_GAP
+
         local dungeonText = parent:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-        dungeonText:SetSize(dungeonW - DUNGEON_ICON_SIZE - COL_GAP, ROW_H)
-        dungeonText:SetPoint("TOPLEFT", parent, "TOPLEFT",
-            colX["dungeon"] + DUNGEON_ICON_SIZE + COL_GAP, rowY)
+        dungeonText:SetSize(dungeonTextW, ROW_H)
+        dungeonText:SetPoint("TOPLEFT", parent, "TOPLEFT", dungeonTextX, rowY)
         dungeonText:SetJustifyH("LEFT")
         dungeonText:SetJustifyV("MIDDLE")
-        dungeonText:SetText(addon.colors.ARTIFACT .. dungeonName .. addon.colors.RESET)
+        -- Coloured through SetTextColor instead of an inline |cff escape: the
+        -- journal link's hover highlight can only override the former.
+        dungeonText:SetText(dungeonName)
+        dungeonText:SetTextColor(ARTIFACT_R, ARTIFACT_G, ARTIFACT_B, 1)
+
+        addon.attachDungeonJournalLink(parent, dungeonText, mapID, dungeonName,
+            dungeonTextX, rowY, dungeonTextW, ROW_H)
 
         local levelText = parent:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
         levelText:SetSize(COL_W.level, ROW_H)
@@ -585,7 +658,7 @@ local function createRow(parent, entry, colX, nameW, dungeonW, rowY, isLast)
         colX["portrait"], rowY - (ROW_H - PORTRAIT_SIZE) / 2)
     SetPortraitTexture(portrait, unitToken)
 
-    createNameAndClassCell(parent, colX, nameW, rowY, entry.name, entry.class)
+    createNameAndClassCell(parent, colX, nameW, rowY, entry.name, entry.class, unitToken)
 
     local role = getEffectiveRole(unitToken)
     local roleAtlas = role and ROLE_ATLAS_BY_ROLE[role]
