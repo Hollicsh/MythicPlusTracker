@@ -220,30 +220,24 @@ local function createTableRow(child, mapID, colX, rowY, nameW, runLookup, isLast
         formatBestTime(ri and ri.bestTime, timeLimit), "GameFontHighlight", "RIGHT")
 
     if ri and ri.bestTime and ri.bestTime > 0 then
-        local hitFrame = CreateFrame("Frame", nil, child)
-        hitFrame:SetSize(COL_W.bestTime, ROW_H)
-        hitFrame:SetPoint("TOPLEFT", child, "TOPLEFT", colX["bestTime"], rowY)
-        hitFrame:EnableMouse(true)
         local capturedBestTime  = ri.bestTime
         local capturedTimeLimit = timeLimit
-        hitFrame:SetScript("OnEnter", function(self)
-            GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
-            GameTooltip:SetText(
-                addon.locale["DUNGEON_TOOLTIP_TIME_LIMIT"] or "Time Limit",
-                ARTIFACT_R, ARTIFACT_G, ARTIFACT_B, 1, true)
-            local delta    = capturedTimeLimit - capturedBestTime
-            local absDelta = math.abs(delta)
-            local deltaStr = addon.formatMinutesSeconds(absDelta)
-            if delta >= 0 then
-                GameTooltip:AddLine("+" .. deltaStr, 0, 0.8, 0, 1)
-            else
-                GameTooltip:AddLine("-" .. deltaStr, 1, 0.2, 0.2, 1)
-            end
-            GameTooltip:Show()
-        end)
-        hitFrame:SetScript("OnLeave", function()
-            GameTooltip:Hide()
-        end)
+        addon.createTableCellHoverArea(child, colX["bestTime"], rowY, COL_W.bestTime, ROW_H,
+            function(self)
+                GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+                GameTooltip:SetText(
+                    addon.locale["DUNGEON_TOOLTIP_TIME_LIMIT"] or "Time Limit",
+                    ARTIFACT_R, ARTIFACT_G, ARTIFACT_B, 1, true)
+                local delta    = capturedTimeLimit - capturedBestTime
+                local absDelta = math.abs(delta)
+                local deltaStr = addon.formatMinutesSeconds(absDelta)
+                if delta >= 0 then
+                    GameTooltip:AddLine("+" .. deltaStr, 0, 0.8, 0, 1)
+                else
+                    GameTooltip:AddLine("-" .. deltaStr, 1, 0.2, 0.2, 1)
+                end
+                GameTooltip:Show()
+            end)
     end
 
     if not isLast then
