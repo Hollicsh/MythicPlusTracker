@@ -6,9 +6,11 @@ local JOURNAL_ARTIFACT_R, JOURNAL_ARTIFACT_G, JOURNAL_ARTIFACT_B = addon.colorTo
 -- has pulled it in. Nothing here runs at login, only on an actual click.
 local JOURNAL_ADDON = "Blizzard_EncounterJournal"
 
--- Mythic Keystone. A dungeon opened from this addon should show the difficulty
--- this addon is about, not whatever the journal had selected last.
-local KEYSTONE_DIFFICULTY_ID = DifficultyUtil.ID.DungeonChallenge
+-- Mythic, not Mythic Keystone: EJ_IsValidInstanceDifficulty only accepts 1
+-- (Normal), 2 (Heroic), 23 (Mythic) and 24 (Timewalking) for dungeons, so
+-- passing DungeonChallenge leaves the journal with no difficulty selected at
+-- all. Mythic shows the same bosses and loot a keystone run does.
+local JOURNAL_DIFFICULTY_ID = DifficultyUtil.ID.DungeonMythic
 
 -- mapChallengeModeID -> journalInstanceID, or false for a dungeon the journal
 -- has no entry for. Both lookups below are static game data, so one answer per
@@ -39,7 +41,9 @@ local function resolveJournalInstanceID(mapID)
     return journalInstanceID
 end
 
----Opens the Adventure Guide on one dungeon, at the Mythic Keystone difficulty.
+---Opens the Adventure Guide on one dungeon, at Mythic difficulty, and closes
+---the tracker behind it — the journal is a full-size window and would otherwise
+---come up half-hidden under it.
 ---@param journalInstanceID number
 local function openJournal(journalInstanceID)
     -- The player can have the journal addon disabled entirely, in which case
@@ -52,10 +56,20 @@ local function openJournal(journalInstanceID)
 
     -- Blizzard UI code, called straight from our click handler: a fault in it
     -- must not surface as an error in this addon (CODING_GUIDELINES 14.2.2).
-    local succeeded, openError = pcall(EncounterJournal_OpenJournal, KEYSTONE_DIFFICULTY_ID, journalInstanceID)
+    local succeeded, openError = pcall(EncounterJournal_OpenJournal, JOURNAL_DIFFICULTY_ID, journalInstanceID)
     if not succeeded then
         addon.debugMessage("DungeonJournalWidgets: opening the journal failed: " .. tostring(openError))
+        return
     end
+
+    -- OpenJournal swallows a difficulty the instance doesn't support without
+    -- saying so, and the journal then keeps whatever it had. Setting it again
+    -- is the only way to know the selection actually took.
+    if EJ_GetDifficulty() ~= JOURNAL_DIFFICULTY_ID and EJ_IsValidInstanceDifficulty(JOURNAL_DIFFICULTY_ID) then
+        EJ_SetDifficulty(JOURNAL_DIFFICULTY_ID)
+    end
+
+    MPT_Tracker:hide()
 end
 
 ---Turns a dungeon-name label into a link that opens the Adventure Guide at that

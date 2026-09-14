@@ -200,6 +200,9 @@ globals = {
     "UnitPopup_OpenMenu",
     "C_EncounterJournal",
     "EncounterJournal_OpenJournal",
+    "EJ_GetDifficulty",
+    "EJ_SetDifficulty",
+    "EJ_IsValidInstanceDifficulty",
     "DifficultyUtil",
 
     -- -----------------------------------------------------------------------
