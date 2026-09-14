@@ -469,7 +469,7 @@ local function createNameAndClassCell(parent, colX, nameW, rowY, name, englishCl
 
     local nameR, nameG, nameB, nameA = nameText:GetTextColor()
 
-    addon.createClickArea(parent, colX["name"], rowY, nameW, ROW_H,
+    addon.createClickArea(parent, colX["name"], rowY, addon.textHotspotWidth(nameText, nameW), ROW_H,
         function()
             openPlayerMenu(unitToken, name)
         end,

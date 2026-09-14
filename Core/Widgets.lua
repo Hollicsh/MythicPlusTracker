@@ -32,6 +32,21 @@ function addon.createRowDivider(parent, y, alpha)
     return line
 end
 
+---How wide a click area over a text label should be: as wide as the rendered
+---text, never wider than the cell it sits in.
+---
+---Sizing it to the cell instead would put the tooltip's ANCHOR_RIGHT at the
+---column edge — far from the name it describes and on top of the neighbouring
+---columns — and would light the hover highlight up over empty space next to
+---short names. GetStringWidth reports the full text width even when the label
+---itself truncates it, hence the clamp.
+---@param label FontString already carrying its final text
+---@param maxWidth number the cell width
+---@return number
+function addon.textHotspotWidth(label, maxWidth)
+    return math.min(label:GetStringWidth(), maxWidth)
+end
+
 ---Creates an invisible, clickable button over a rectangle of `parent`. A
 ---FontString can't receive mouse events on its own, and the table views lay
 ---their cells out directly on the scroll child without per-row frames, so a

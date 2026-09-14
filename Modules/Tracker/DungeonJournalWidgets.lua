@@ -89,7 +89,7 @@ function addon.attachDungeonJournalLink(parent, label, mapID, name, x, y, w, h)
 
     local labelR, labelG, labelB, labelA = label:GetTextColor()
 
-    return addon.createClickArea(parent, x, y, w, h,
+    return addon.createClickArea(parent, x, y, addon.textHotspotWidth(label, w), h,
         function()
             openJournal(journalInstanceID)
         end,
