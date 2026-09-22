@@ -2,7 +2,7 @@
 
 All notable changes to MythicPlusTracker are documented here.
 
-## [1.6.0] - Unreleased
+## [1.6.0] - 2026-09-22
 
 ### Added
 - **Keystones of group and guild members who don't run MythicPlusTracker.** Rows now also fill from LibKeystone, which DBM and similar addons already ship. Such values carry a `*`; hovering one shows where it came from and when it arrived.
